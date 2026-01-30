@@ -12,5 +12,11 @@
 	1. module purge   
   6. we can turn "on" or "load" qiime2  
 	  1. module load qiime2/2024.10_amplicon
+7. Copy the data
+	1. cp /pl/active/courses/2025_summer/CSU_2025/q2_workshop_final/QIIME2/metadata_q2_workshop.txt .
+8. Metadata
+	1. 
+9. Decomp
+	1. qiime metadata tabulate \ --m-input-file metadata.txt \ --o-visualization metadata.qzv
 	
 
