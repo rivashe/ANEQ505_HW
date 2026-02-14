@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ANEQ Command List by week.md",
+                "file": "01_homework/homework_1_mac.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ANEQ Command List by week"
+              "title": "homework_1_mac"
             }
           }
         ],
@@ -226,8 +226,9 @@
   },
   "active": "462007e1dc76517c",
   "lastOpenFiles": [
-    "Untitled.md",
     "ANEQ Command List by week.md",
+    "01_homework/homework_1_mac.md",
+    "Untitled.md",
     "ANEQ 505 - Commands.md",
     "05_in_class_work/metadata/metadata.qzv",
     "05_in_class_work/metadata/Unconfirmed 606342.crdownload",
