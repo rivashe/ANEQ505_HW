@@ -13,7 +13,7 @@
 
 ## Wet‑lab considerations
 
-- Field handling: consistent collection method (swab, feces, biopsy, water filter), minimize time to preservation, consider biomass and contamination risk.Week3_Mon_denoising_02-02-26.pdf+1
+- Field handling: consistent collection method (swab, feces, biopsy, water filter), minimize time to preservation, consider biomass and contamination risk.
     
 - Lysis options:
     
@@ -53,7 +53,7 @@
 
 ## Denoising
 
-- Denoising algorithms (DADA2, Deblur, MED, UNOISE3) model sequencing errors and infer **exact** amplicon sequence variants (ASVs/ESVs).paste.txt+1
+- Denoising algorithms (DADA2, Deblur, MED, UNOISE3) model sequencing errors and infer **exact** amplicon sequence variants (ASVs/ESVs).
     
 - Key features:
     
@@ -99,7 +99,7 @@
 
 - Use demux quality plots (`demux.qzv`) to:
     
-    - Identify where median quality drops sharply; truncate before the crash.week4_Mon_Alpha_lecture.pdf+1
+    - Identify where median quality drops sharply; truncate before the crash.
         
     - Optionally trim low‑quality leading bases or primers (e.g., trim‑left 19 to remove 515f primer).​
         
@@ -107,7 +107,7 @@
     
     - Ensure enough overlap after truncation; e.g., 2×150 bp on a 250 bp amplicon: 150 + 150 − 250 = 50 bp overlap.​
         
-    - Too aggressive truncation → merge failures → apparent low diversity and many lost reads.paste.txt+1
+    - Too aggressive truncation → merge failures → apparent low diversity and many lost reads.
         
 
 ---
@@ -120,7 +120,7 @@
     
 - `stats.qza`: denoising stats for troubleshooting.​
     
-- After phylogeny: `rooted-tree.qza` for phylogenetic diversity and UniFrac.Week3_Wed_taxonomy_02-03-26.pdf+1
+- After phylogeny: `rooted-tree.qza` for phylogenetic diversity and UniFrac
     
 
 ---

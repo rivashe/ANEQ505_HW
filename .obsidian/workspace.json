@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ANEQ Command List by week.md",
+                "file": "01_homework/homework_1_mac.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ANEQ Command List by week"
+              "title": "homework_1_mac"
             }
           },
           {
@@ -69,16 +69,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01_homework/homework_1_mac.md",
+                "file": "Class Notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "homework_1_mac"
+              "title": "Class Notes"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -98,7 +98,7 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": true
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -135,7 +135,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "5f5e524c91ab5d0e",
@@ -238,24 +238,23 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "33f289c35915e128",
+  "active": "c3a1f3551e8a749f",
   "lastOpenFiles": [
+    "Test Note.md",
+    "Class Notes.md",
+    "ANEQ Command List by week.md",
+    "ANEQ 505 - Commands.md",
+    "01_homework/homework_1_mac.md",
     "01_homework/metadata/barcodes/cow_barcodes.txt",
     "01_homework/metadata/barcodes/Unconfirmed 468400.crdownload",
     "01_homework/metadata/barcodes",
     "01_homework/metadata/cow_metadata.txt",
     "01_homework/metadata/Unconfirmed 799616.crdownload",
     "01_homework/metadata",
-    "ANEQ 505 - Commands.md",
-    "ANEQ Command List by week.md",
-    "01_homework/homework_1_mac.md",
-    "Class Notes.md",
     "Untitled.md",
-    "Test Note.md",
     "05_in_class_work/metadata/metadata.qzv",
     "05_in_class_work/metadata/Unconfirmed 606342.crdownload",
     "05_in_class_work/metadata",
-    "05_in_class_work",
-    "04_extra_credit"
+    "05_in_class_work"
   ]
 }

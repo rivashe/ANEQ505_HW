@@ -57,6 +57,8 @@ ainteractive --ntasks=6 --time=02:00:00
 
 #insert your code here to activate qiime. Hint: there should be 2 things you add here
 
+module purge
+module load qiime2/2024.10_amplicon
 
 ```
 
