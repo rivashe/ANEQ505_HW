@@ -20,7 +20,7 @@ tooling: Alpine (OnDemand) + QIIME2 + Git/Obsidian
 ### A) Logging in (OnDemand → Terminal)
 - **Goal:** Open an Alpine shell via OnDemand website.
 
-✅ Notes / Output:
+Notes / Output:
 - Bookmark saved: yes/no  
 - Duo working: yes/no  
 
@@ -33,7 +33,7 @@ pwd
 
 What it does: Prints your current directory (where you “are” on the system).
 
-✅ Notes / Output:
+Notes / Output:
 
 Returned path:
 
@@ -49,7 +49,7 @@ ls -a includes hidden “dot files”
 
 ls -l long format (permissions, size, date)
 
-✅ Notes / Output:
+Notes / Output:
 
 Any unexpected files:
 
@@ -58,7 +58,7 @@ cd /scratch/alpine/USER@colostate.edu
 What it does: Changes directory to scratch (where we compute).
 Why: Scratch is fast + large quota; home is small + not for compute.
 
-✅ Notes / Output:
+Notes / Output:
 
 Confirmed scratch:
 
@@ -71,7 +71,7 @@ mkdir makes a directory
 
 cd moves into it
 
-✅ Notes / Output:
+Notes / Output:
 
 Folder created successfully: yes/no
 
@@ -79,7 +79,7 @@ F) Go up one directory level
 cd ../
 What it does: Moves “up” one level (relative path navigation).
 
-✅ Notes / Output:
+Notes / Output:
 
 Now in:
 
@@ -94,7 +94,7 @@ cp SOURCE . copies a file into current folder
 
 mv old new renames/moves a file
 
-✅ Notes / Output:
+Notes / Output:
 
 metadata.txt present (check with ls): yes/no
 
@@ -107,7 +107,7 @@ module purge clears loaded modules (avoid conflicts)
 
 module load ... activates QIIME2 environment
 
-✅ Notes / Output:
+Notes / Output:
 
 Any caching message:
 
@@ -117,7 +117,7 @@ qiime metadata tabulate \
   --o-visualization metadata.qzv
 What it does: Converts metadata into a .qzv viewable in view.qiime2.org.
 
-✅ Notes / Output:
+Notes / Output:
 
 Transferred metadata.qzv to laptop: yes/no
 
@@ -129,7 +129,7 @@ Add to ~/.bashrc:
 export TMPDIR=/scratch/alpine/$USER/tmp
 What it does: Forces temp files into scratch (often faster + avoids home quota issues).
 
-✅ Notes / Output:
+Notes / Output:
 
 Added successfully: yes/no
 
@@ -138,7 +138,7 @@ A) Start reserved interactive session (class node)
 sinteractive --reservation=aneq505 --time=01:00:00 --partition=amilan --nodes=1 --ntasks=6 --qos=normal
 What it does: Requests an interactive compute node reserved for class (so commands run “on compute” interactively).
 
-✅ Notes / Output:
+Notes / Output:
 
 Node allocated: yes/no
 
@@ -150,7 +150,7 @@ cd /scratch/alpine/$USER/decomp_tutorial
 pwd
 What it does: Moves to your analysis folder; pwd confirms location.
 
-✅ Notes / Output:
+Notes / Output:
 
 Confirmed path:
 
@@ -158,7 +158,7 @@ D) Create analysis subfolders (organization)
 mkdir slurm taxonomy tree taxaplots dada2 demux core_metrics manifest
 What it does: Creates standard directories so outputs don’t get messy.
 
-✅ Notes / Output:
+Notes / Output:
 
 Created all folders: yes/no
 
@@ -167,7 +167,7 @@ cp /pl/active/courses/2025_summer/CSU_2025/q2_workshop_final/QIIME2/manifest_run
 cp /pl/active/courses/2025_summer/CSU_2025/q2_workshop_final/QIIME2/manifest_run3.txt manifest/
 What it does: Copies text files listing sample IDs + paths to FASTQs.
 
-✅ Notes / Output:
+Notes / Output:
 
 Manifests present:
 
@@ -176,7 +176,7 @@ cp -r /pl/active/courses/2025_summer/CSU_2025/q2_workshop_final/QIIME2/reads_run
 cp -r /pl/active/courses/2025_summer/CSU_2025/q2_workshop_final/QIIME2/reads_run3 .
 What it does: Copies per-sample FASTQs into your workspace.
 
-✅ Notes / Output:
+Notes / Output:
 
 Spot-check reads_run2 has .fastq.gz files: yes/no
 
@@ -194,7 +194,7 @@ qiime tools import \
   --output-path demux/demux_run3.qza
 What it does: Converts raw FASTQs into QIIME2 artifacts (.qza) with correct semantic type.
 
-✅ Notes / Output:
+Notes / Output:
 
 .qza files created: yes/no
 
@@ -208,7 +208,7 @@ qiime demux summarize \
   --o-visualization demux/demux_run3.qzv
 What it does: Creates interactive plots (read counts + quality profiles).
 
-✅ Notes / Output:
+Notes / Output:
 
 Read length:
 
@@ -245,7 +245,7 @@ seqs_*.qza (rep sequences)
 
 dada2_stats_*.qza (per-sample read retention)
 
-✅ Notes / Output:
+Notes / Output:
 
 Trunc params used:
 
@@ -263,7 +263,7 @@ qiime metadata tabulate \
   --o-visualization dada2_stats_run3.qzv
 What it does: Makes the stats readable in QIIME2 View.
 
-✅ Notes / Output:
+Notes / Output:
 
 Lowest % non-chimeric sample:
 
@@ -276,7 +276,7 @@ qiime feature-table merge \
   --o-merged-table table.qza
 What it does: Combines ASV counts across runs into one feature table.
 
-✅ Notes / Output:
+Notes / Output:
 
 table.qza created: yes/no
 
@@ -287,7 +287,7 @@ qiime feature-table summarize \
   --m-sample-metadata-file ../metadata/metadata.txt
 What it does: Gives per-sample and per-feature counts + links metadata.
 
-✅ Notes / Output:
+Notes / Output:
 
 samples:
 Min reads:
@@ -301,7 +301,7 @@ qiime feature-table merge-seqs \
   --o-merged-data seqs.qza
 What it does: Combines ASV sequences into one artifact.
 
-✅ Notes / Output:
+Notes / Output:
 
 seqs.qza created:
 
@@ -311,7 +311,7 @@ qiime feature-table tabulate-seqs \
   --o-visualization seqs.qzv
 What it does: Lets you view ASV IDs and sequences.
 
-✅ Notes / Output:
+Notes / Output:
 
 Clicking sequence shows:
 
@@ -346,7 +346,7 @@ Submit:
 sbatch slurm/test.sh
 What it does: Runs commands on compute nodes without you babysitting it.
 
-✅ Notes / Output:
+Notes / Output:
 
 Job ID:
 
@@ -358,7 +358,7 @@ wget -O "gg-13-8-99-515-806-nb-classifier.qza" \
   "https://data.qiime2.org/2023.5/common/gg-13-8-99-515-806-nb-classifier.qza"
 What it does: Downloads a pretrained Naive Bayes classifier.
 
-✅ Notes / Output:
+Notes / Output:
 
 File size:
 
@@ -371,7 +371,7 @@ qiime feature-classifier classify-sklearn \
   --o-classification taxonomy.qza
 What it does: Assigns taxonomy labels to ASVs.
 
-✅ Notes / Output:
+Notes / Output:
 
 Runtime:
 
@@ -389,7 +389,7 @@ qiime taxa barplot \
   --o-visualization taxaplots/taxa_barplot.qzv
 What it does: Stacked barplots by taxonomic level + metadata grouping.
 
-✅ Notes / Output:
+Notes / Output:
 
 Biggest phyla:
 
@@ -403,7 +403,7 @@ qiime taxa filter-table \
   --o-filtered-table table-no-mito-no-chloro.qza
 What it does: Removes features annotated as mito/chloro.
 
-✅ Notes / Output:
+Notes / Output:
 
 Features removed?:
 
@@ -418,7 +418,7 @@ qiime diversity alpha-rarefaction \
   --p-max-depth 4900
 What it does: Shows richness/evenness vs depth; helps pick rarefaction depth.
 
-✅ Notes / Output:
+Notes / Output:
 
 Depth where curves level off:
 
@@ -451,7 +451,7 @@ Submit:
 sbatch tree/sepp_script.sh
 What it does: Builds a phylogenetic tree needed for phylogenetic diversity metrics.
 
-✅ Notes / Output:
+Notes / Output:
 
 Job ID:
 
@@ -511,8 +511,3 @@ Add “core-metrics-phylogenetic” workflow once introduced
 Add beta diversity + PERMANOVA commands when covered
 
 Add longitudinal/time-series methods if used
-
-
-If you want, I can also:
-- convert this into a **shorter “cheat-sheet” version** (1–2 pages), or  
-- restructure it into **Week → Goal → Inputs → Commands → Outputs** (super nice for grading + reproducibility).
