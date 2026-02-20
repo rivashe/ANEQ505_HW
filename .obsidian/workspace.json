@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Class Notes.md",
+                "file": "01_homework/homework_1_mac.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Class Notes"
+              "title": "homework_1_mac"
             }
           }
         ],
@@ -240,19 +240,22 @@
   },
   "active": "33f289c35915e128",
   "lastOpenFiles": [
+    "01_homework/metadata/barcodes/cow_barcodes.txt",
+    "01_homework/metadata/barcodes/Unconfirmed 468400.crdownload",
+    "01_homework/metadata/barcodes",
+    "01_homework/metadata/cow_metadata.txt",
+    "01_homework/metadata/Unconfirmed 799616.crdownload",
+    "01_homework/metadata",
     "ANEQ 505 - Commands.md",
-    "Class Notes.md",
     "ANEQ Command List by week.md",
+    "01_homework/homework_1_mac.md",
+    "Class Notes.md",
     "Untitled.md",
     "Test Note.md",
-    "01_homework/homework_1_mac.md",
     "05_in_class_work/metadata/metadata.qzv",
     "05_in_class_work/metadata/Unconfirmed 606342.crdownload",
     "05_in_class_work/metadata",
     "05_in_class_work",
-    "04_extra_credit",
-    "03_paper_discussions",
-    "02_class_project",
-    "01_homework"
+    "04_extra_credit"
   ]
 }
