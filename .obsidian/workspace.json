@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01_homework/homework_1_mac.md",
+                "file": "ANEQ Command List by week.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "homework_1_mac"
+              "title": "ANEQ Command List by week"
             }
           },
           {
@@ -240,6 +240,12 @@
   },
   "active": "c3a1f3551e8a749f",
   "lastOpenFiles": [
+    "ANEQ 505 - Commands.md",
+    "Untitled.md",
+    "Test Note.md",
+    "Class Notes.md",
+    "ANEQ Command List by week.md",
+    "01_homework/homework_1_mac.md",
     "01_homework/anlaysis_qzv/cow_table_dada2.qza",
     "01_homework/anlaysis_qzv/Unconfirmed 551576.crdownload",
     "01_homework/anlaysis_qzv/cow_seqs_dada2.qzv",
@@ -249,13 +255,6 @@
     "01_homework/anlaysis_qzv/demux_cow.qzv",
     "01_homework/anlaysis_qzv/Unconfirmed 7336.crdownload",
     "01_homework/anlaysis_qzv",
-    "Test Note.md",
-    "Class Notes.md",
-    "ANEQ Command List by week.md",
-    "ANEQ 505 - Commands.md",
-    "01_homework/homework_1_mac.md",
-    "01_homework/metadata/barcodes/cow_barcodes.txt",
-    "01_homework/metadata/barcodes/Unconfirmed 468400.crdownload",
-    "Untitled.md"
+    "01_homework/metadata/barcodes/cow_barcodes.txt"
   ]
 }
