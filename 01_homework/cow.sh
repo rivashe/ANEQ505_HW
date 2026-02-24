@@ -50,9 +50,6 @@ qiime demux summarize \
   --o-visualization demux_cow.qzv
 
 # --- DENOISE ---
-# NOTE: Check demux_cow.qzv FIRST to pick trim/trunc values!
-# The values below (trim 0/0, trunc 240/200) are starting estimates.
-# Adjust based on YOUR quality plot, then re-run this section.
 cd /scratch/alpine/$USER/aneq505/hw1/dada2
 echo ">>> Denoising with DADA2..."
 qiime dada2 denoise-paired \
