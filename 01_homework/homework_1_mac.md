@@ -123,46 +123,47 @@ qiime demux summarize \
 Fill in the blank to denoise your samples based on what you think should be trimmed (from the front of the reads) or truncated (from the ends of the reads) based on the demux_cow.qzv file. You can run this in the terminal or as a job.
 
 ```
-cd ADD PATH TO DADA2 DIRECTORY
+cd /scratch/alpine/$USER/aneq505/hw1/dada2
 
 qiime dada2 denoise-paired \
---i-demultiplexed-seqs ../demux/demux_cow.qza \
---p-trim-left-f NUMBER \
---p-trim-left-r NUMBER \
---p-trunc-len-f NUMBER \
---p-trunc-len-r NUMBER \
---p-n-threads 6 \
---o-representative-sequences cow_seqs_dada2.qza \
---o-denoising-stats cow_dada2_stats.qza \
---o-table cow_table_dada2.qza
+  --i-demultiplexed-seqs ../demux/demux_cow.qza \
+  --p-trim-left-f 0 \
+  --p-trim-left-r 0 \
+  --p-trunc-len-f 250 \
+  --p-trunc-len-r 250 \
+  --p-n-threads 6 \
+  --o-representative-sequences cow_seqs_dada2.qza \
+  --o-denoising-stats cow_dada2_stats.qza \
+  --o-table cow_table_dada2.qza
 
 #Visualize the denoising results:
 qiime metadata tabulate \
---m-input-file cow_dada2_stats.qza \
---o-visualization YOUR_OUTPUT_FILENAME_HERE.qzv
+  --m-input-file cow_dada2_stats.qza \
+  --o-visualization cow_dada2_stats.qzv
 
 qiime feature-table summarize \
---i-table cow_table_dada2.qza \
---m-sample-metadata-file ../metadata/cow_metadata.txt \
---o-visualization YOUR_OUTPUT_FILENAME_HERE.qzv
+  --i-table cow_table_dada2.qza \
+  --m-sample-metadata-file ../metadata/cow_metadata.txt \
+  --o-visualization cow_table_dada2.qzv
 
 qiime feature-table tabulate-seqs \
---i-data cow_seqs_dada2.qza \
---o-visualization YOUR_OUTPUT_FILENAME_HERE.qzv
+  --i-data cow_seqs_dada2.qza \
+  --o-visualization cow_seqs_dada2.qzv
+  
 ```
 
 	
 Briefly **describe** the key information from each denoising output file:
-1. Representative Sequences
-2. Denoising Stats
-3. Denoised Table
+1. Representative Sequences: 4,653 ASVs were recovered with a mean length of ~253bp
+2. Denoising Stats: Most sample retained 70% < of input through the final non-chimeric step. 
+3. Denoised Table: 147 samples, and 4,653 freatures with a total frequency of 1,634,012. Mean frequency per sample is 11,115.6 with a maximum of 33,768.
 
 **Answer the following questions:**  
-1. What is the mean reads per sample?
-2. How long are the reads?
-3. What is the maximum length of all your sequences?
-4. Which sample (not including extraction controls starting with EC) lost the highest % of reads?
-5. Why did you chose to trim or truncate where you did?
+1. What is the mean reads per sample? 11,116 reads from the feature table summary
+2. How long are the reads? 253.34 bp is the mean length
+3. What is the maximum length of all your sequences? 427 bp 
+4. Which sample (not including extraction controls starting with EC) lost the highest % of reads? 2019.3.14.cow.oral.20 was the lowest, losing ~91.24% of reads (only 8.76% were retained)
+5. Why did you chose to trim or truncate where you did? Trim-left was set to 0 since the quality plot shows quality is already high from position 1 — no low-quality leading bases needed removal. Truncation at **250/250** was chosen because both forward and reverse reads maintain strong Q30+ quality across the full 250 bp length, and 250 + 250 = 500 bp total gives ~247 bp of overlap for a 253 bp V4 amplicon, well above the minimum needed for reliable merging.
 
 **To submit your homework from this document:**
 write all of your commands here, then use command+P (for mac) or control+P (for windows) and search Git: commit. click it. then search for Git: Push and click it. go to your github online to check that it pushed correctly. we will check your github for homework credit. 
