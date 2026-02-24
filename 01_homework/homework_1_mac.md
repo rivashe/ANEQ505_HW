@@ -163,7 +163,7 @@ Briefly **describe** the key information from each denoising output file:
 2. How long are the reads? 253.34 bp is the mean length
 3. What is the maximum length of all your sequences? 427 bp 
 4. Which sample (not including extraction controls starting with EC) lost the highest % of reads? 2019.3.14.cow.oral.20 was the lowest, losing ~91.24% of reads (only 8.76% were retained)
-5. Why did you chose to trim or truncate where you did? Trim-left was set to 0 since the quality plot shows quality is already high from position 1 — no low-quality leading bases needed removal. Truncation at **250/250** was chosen because both forward and reverse reads maintain strong Q30+ quality across the full 250 bp length, and 250 + 250 = 500 bp total gives ~247 bp of overlap for a 253 bp V4 amplicon, well above the minimum needed for reliable merging.
+5. Why did you chose to trim or truncate where you did? Trim-left was set to 0 since the quality plot shows quality is already high from position 1, no low-quality leading bases needed removal. Truncation at **250/250** was chosen because both forward and reverse reads maintain strong Q30+ quality across the full 250 bp length.
 
 *Note: I did a bash script to run everything, see as "cow.sh"*
 
