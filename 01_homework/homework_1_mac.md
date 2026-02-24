@@ -165,5 +165,7 @@ Briefly **describe** the key information from each denoising output file:
 4. Which sample (not including extraction controls starting with EC) lost the highest % of reads? 2019.3.14.cow.oral.20 was the lowest, losing ~91.24% of reads (only 8.76% were retained)
 5. Why did you chose to trim or truncate where you did? Trim-left was set to 0 since the quality plot shows quality is already high from position 1 — no low-quality leading bases needed removal. Truncation at **250/250** was chosen because both forward and reverse reads maintain strong Q30+ quality across the full 250 bp length, and 250 + 250 = 500 bp total gives ~247 bp of overlap for a 253 bp V4 amplicon, well above the minimum needed for reliable merging.
 
+*Note: I did a bash script to run everything, see as "cow.sh"*
+
 **To submit your homework from this document:**
 write all of your commands here, then use command+P (for mac) or control+P (for windows) and search Git: commit. click it. then search for Git: Push and click it. go to your github online to check that it pushed correctly. we will check your github for homework credit. 
