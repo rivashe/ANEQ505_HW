@@ -535,3 +535,500 @@
     - Transparent reporting (MIMARKS/MIxS) is essential for evaluating these studies.​
         
 
+Here’s a markdown-ready set of class notes that integrates and expands on all four lectures with primary literature sprinkled throughout.
+
+---
+
+# Week 5–7 Microbiome Methods Notes
+
+## 1. High‑quality microbiome data
+
+## 1.1 Common confounders and technical artifacts
+
+Microbiome data quality is shaped by both biology and workflow choices. Key artifact categories:​
+
+- Maternal effects: vertical transmission of microbes and shared environment can drive strong similarity within litters or families, often larger than experimental effects (e.g., Goodrich et al. 2014 on heritable taxa in the human gut)​
+    
+- Co‑housing effects: cage/pen mates rapidly converge in community composition; housing can be a stronger driver than treatment if not controlled.​
+    
+- Sampling effects:
+    
+    - Collection method: swab vs. filter vs. biopsy vs. fecal can yield different communities because of spatial structuring and biomass differences.​
+        
+    - Spatial sampling: depth in soil/water, gut site (lumen vs. mucosa, rumen vs. feces) strongly affects composition.​
+        
+    - Biomass: low vs. high biomass samples differ in susceptibility to contamination and stochasticity.​
+        
+- Shipping/storage effects: temperature, time to freezing, use of preservatives (e.g., RNAlater, OMNIgene) can shift communities; consistent protocols are critical.​
+    
+- Molecular workflow effects: extraction kit, bead‑beating intensity, primer set, PCR cycles, and library prep chemistry all change observed taxa and diversity.Week6_Mon_BetaTrends_copy.pdf+1
+    
+- Computational effects: choice of denoising (DADA2, Deblur), OTU vs. ASV, reference database, and normalization/rarefaction affect downstream metrics, especially beta diversity.week5_Wed_betadiv.pdf+1
+    
+
+Design implication: randomize samples across batches/plates, document every step (reagent lot numbers, extraction dates), and whenever possible block on known sources of variation (e.g., process all low‑biomass samples together).​
+
+## 1.2 Contamination types and sources
+
+Contaminants are a major threat, especially for low‑biomass work. Common sources:​
+
+- Reagents and plastics: extraction kits, magnetic beads, water, PCR mastermix, and plasticware often carry characteristic contaminant taxa.​
+    
+- Environmental contamination: skin, oral, lab air/dust, surfaces, and equipment can introduce DNA.​
+    
+- Cross‑contamination (“well‑to‑well” and “run‑to‑run”):
+    
+    - Splashing, aerosols, pipetting errors, and index hopping introduce cross‑talk.
+        
+    - Contamination tends to be strongest in neighboring wells but can extend several wells away.​
+        
+
+A high‑profile example is the re‑analysis of a cancer microbiome study where a nearly perfect tumor–microbe signature was largely explained by contaminants and batch structure rather than biology.​
+
+## 1.3 Controls and best practices
+
+## Negative controls
+
+Include at least one per batch of each type:​
+
+- Sampling blank (swab/field blank).
+    
+- Extraction blank.
+    
+- No‑template PCR control.
+    
+
+These are used to:
+
+- Characterize the background community carried by reagents and environment.
+    
+- Identify taxa whose abundance scales with low DNA concentration (strong contaminant signature).
+    
+
+Crucially, do not simply remove all taxa seen in negatives, because many of those taxa may also be true constituents of biological samples that have bled into controls.​
+
+## Positive controls (mock communities)
+
+Mock communities (known composition and abundance) are essential for benchmarking:
+
+- Evaluate taxonomic accuracy and sensitivity.
+    
+- Detect amplification bias, chimera rates, and misclassifications.​
+    
+
+In QIIME 2, q2‑quality‑control provides:​
+
+- `evaluate_composition`: compare expected vs. observed taxonomic compositions for mock samples.
+    
+- `evaluate_seqs`: compare expected vs. observed sequences to assess denoising/OTU picking.
+    
+
+## Dedicated guidance for low‑biomass samples
+
+Eisenhofer et al. 2019 proposed the RIDE checklist for low‑biomass work:​
+
+- Explicitly report design and contamination‑reduction steps.
+    
+- Include all negative control types per sampling/extraction/amplification batch.
+    
+- Quantify contamination by comparing negatives to biological samples.
+    
+- Explore contaminant taxa and report their impact on interpretation, ideally using statistical contaminant identification models.
+    
+
+In practice, tools like decontam implement models based on two reproducible patterns: contaminant features increase in relative abundance in low‑DNA samples and they are enriched in negatives.​
+
+After quality control, negative and positive control samples themselves should be removed from downstream biological analyses, but the information they provided should already have been used to filter or annotate taxa.​
+
+---
+
+## 2. Beta diversity and distance metrics
+
+## 2.1 Alpha vs. beta diversity and rarefaction
+
+- Alpha diversity: within‑sample richness/evenness (e.g., observed ASVs, Shannon, Faith’s PD).​
+    
+- Beta diversity: between‑sample differences in community composition, expressed as a distance or dissimilarity matrix.​
+    
+
+Because diversity is strongly affected by sequencing depth, rarefaction or other normalization is needed before comparing samples:
+
+- Two samples with similar read depth can appear artificially similar, even if biologically distinct.​
+    
+- Normalizing reads (e.g., rarefaction, compositional approaches) reduces depth‑driven artifacts but introduces its own trade‑offs.​
+    
+
+## 2.2 Common beta diversity metrics
+
+All metrics operate on a feature table (samples × taxa/features), sometimes with a phylogenetic tree.​
+
+Non‑phylogenetic metrics:
+
+- Bray–Curtis distance:
+    
+    - Abundance‑weighted, non‑phylogenetic.
+        
+    - Captures differences in relative abundances; sensitive to dominant taxa.​
+        
+- Jaccard distance:
+    
+    - Presence–absence only.
+        
+    - Reflects whether taxa are shared, ignoring abundance.​
+        
+
+Phylogenetic metrics (require a rooted tree):
+
+- Unweighted UniFrac: fraction of branch length unique to each community, presence–absence only.​
+    
+- Weighted UniFrac: similar but incorporates relative abundance along branches, emphasizing abundant taxa.​
+    
+
+High‑level comparison:
+
+|Metric|Phylogenetic?|Uses abundance?|Emphasis|
+|---|---|---|---|
+|Bray–Curtis|No|Yes|Differences in relative abundances|
+|Jaccard|No|No|Shared vs. unique taxa presence|
+|Unweighted UniFrac|Yes|No|Deep evolutionary gains/losses|
+|Weighted UniFrac|Yes|Yes|Abundant, phylogenetically structured taxa|
+
+Examples in the lecture slides explicitly show how Bray–Curtis, Jaccard, and UniFrac distance matrices differ for the same toy feature table.​
+
+## 2.3 Beta diversity visualization: ordination and PCoA
+
+A distance matrix is usually interpreted via ordination.
+
+- Principal Coordinates Analysis (PCoA) embeds samples in a low‑dimensional space that preserves pairwise distances as much as possible.​
+    
+- Axes (PCo1, PCo2, …) have associated % variance explained, indicating how much of the between‑sample variation is represented.​
+    
+
+Examples:
+
+- Costello et al. 2009 (Science) showed that different human body sites cluster separately based on unweighted UniFrac PCoA, illustrating strong habitat‑specific microbiomes.​
+    
+- The Earth Microbiome Project meta‑analysis (Thompson et al. 2017 Nature) showed that environment type and host association are major drivers of global beta diversity across >27,000 samples.
+
+PCoA plots can be colored by metadata (body site, age, treatment, host species) and grouped using ellipses or hulls to visually inspect clustering patterns.
+
+## 2.4 Statistical testing on beta diversity
+
+Once you have a distance matrix, you can test for group differences:
+
+- PERMANOVA (e.g., `beta-group-significance` in QIIME 2):
+    
+    - Multivariate ANOVA on distances; null = group centroids are equivalent in multivariate space.​
+        
+    - Sensitive to both centroid differences and differences in dispersion.
+        
+- PERMDISP:
+    
+    - Tests whether dispersion (within‑group variance) differs between groups; used to interpret PERMANOVA results.​
+        
+- ANOSIM:
+    
+    - Tests whether between‑group ranks of distances are greater than or equal to within‑group ranks; often used with ranked dissimilarities.​
+        
+
+In QIIME 2, the `beta-group-significance` visualizer can run PERMANOVA, PERMDISP, and ANOSIM on the same distance matrix.​
+
+---
+
+## 3. Beta diversity trends and functional redundancy
+
+## 3.1 Broad beta‑diversity patterns in microbiome research
+
+## Host vs. environment gradients
+
+Ley et al. (2008, Nat Rev Microbiol) and follow‑up work highlighted that host diet, physiology, and obesity status are associated with clear shifts in gut community structure, often reflected in beta diversity patterns.​
+
+The Earth Microbiome Project (Thompson et al. 2017, Nature) showed:
+
+- Strong clustering by environment type (soil vs. marine vs. host‑associated) using UniFrac and Bray–Curtis distances.
+- Host‑associated microbiomes occupy distinct regions of ordination space relative to free‑living communities.
+
+More recent EMP500 work added standardized multi‑omics (16S, 18S, ITS, metagenomics, metabolomics) and confirmed that beta diversity patterns reflect not just taxonomic composition but also functional potential and metabolite profiles across ecosystems.​
+
+## Human gut across age and lifestyle
+
+- Yatsunenko et al. 2012 demonstrated that gut microbiomes of children and adults differ strongly in UniFrac space, with age and geography being major axes of variation.​
+    
+- Olm et al. 2022 extended this to a large infant cohort, showing that lifestyle (industrialized vs. transitional vs. traditional) and age jointly structure infant gut beta diversity.1​
+    
+
+The American Gut Project further showed that lifestyle factors such as diet (e.g., number of plant types consumed per week) correlate with both alpha diversity and Bray–Curtis distances between individuals, with higher plant diversity associated with more diverse and distinct communities.​
+
+## 3.2 Host phylogeny, diet, and phylosymbiosis
+
+Comparative primate and vertebrate gut microbiome studies reveal:
+
+- Amato et al. 2018 found that host phylogenetic clade explains more beta diversity (unweighted and weighted UniFrac) than dietary niche among primates, indicating that host physiology and evolutionary history outweigh diet alone.​
+    
+- Song et al. 2020 reported convergence between birds and bats: despite different phylogenetic positions, flight‑adapted vertebrates show convergent gut community structures in UniFrac PCoA space, highlighting ecological convergence.]​
+    
+
+Phylosymbiosis: the tendency for more closely related host species to have more similar microbiomes than expected by chance; observed in multiple host clades and quantified using distance‑based methods such as Mantel tests between host phylogenetic distances and microbiome distances​
+
+## 3.3 Diversity and function: functional redundancy
+
+Leff et al. 2015 showed that nutrient additions (N, P) across global grasslands shift microbial beta diversity in a way that correlates with plant community changes.​
+
+- Constrained ordinations (e.g., distance‑based RDA) indicated that N and P treatments significantly explain Bray–Curtis differences in fungal, archaeal, and bacterial communities.​
+    
+- Pearson correlations between mean Bray–Curtis dissimilarity (control vs. fertilized plots) and plant community shifts show coordinated plant–microbe responses.​
+    
+
+Louca et al. 2018 (Nature Ecology & Evolution) examined bromeliad tank communities and found:
+
+- High taxonomic turnover (beta diversity) across samples.
+    
+- Much lower variation in functional gene categories (fermentation, respiration, carbon fixation), implying strong functional redundancy.​
+    
+
+Functional redundancy:
+
+- Different taxa contribute similar functional capabilities, leading to relatively stable functional profiles despite large beta diversity at the taxon level.​
+    
+- In the human gut, metagenomic data likewise show a relatively stable “core” at the gene/pathway level despite person‑to‑person taxonomic variation, consistent with functional redundancy and resilience.​
+    
+
+Recent work (e.g., Li et al. 2023, Nat Commun) reinforced that gut microbial communities often exhibit high redundancy in key metabolic pathways (e.g., SCFA production), which can buffer host function against moderate taxonomic shifts.​
+
+## 3.4 When beta diversity lacks clear patterns
+
+A lack of strong clustering or clear group separation in beta diversity can mean several things:​
+
+- The factor of interest truly has small or context‑dependent effects.
+    
+- Other unmeasured variables (e.g., age, geography, host genetics) dominate variation.
+    
+- The metric chosen is not aligned with the biology (e.g., using presence–absence when abundance changes are key).
+    
+
+Comparative vertebrate studies show cases where host class or habitat does _not_ separate cleanly in ordination space, suggesting convergence or strong functional constraints across distant hosts.​
+
+This reinforces the need to:
+
+- Test multiple distance metrics.
+    
+- Partition variance among covariates (e.g., PERMANOVA with multivariable models).
+    
+- Link beta diversity patterns to functional and ecological hypotheses, not just visual clustering.
+    
+
+---
+
+## 4. 16S rRNA copy number variation (CNV)
+
+## 4.1 Biological background
+
+The ribosome is essential for translation, and 16S rRNA genes are part of highly conserved rRNA operons.​
+
+Microbes differ widely in the number of rRNA operons they carry:
+
+- Oligotrophs (slow‑growing, resource‑limited environments) tend to have few rRNA operons.
+    
+- Copiotrophs (fast‑growing, nutrient‑rich environments) often have many copies, enabling rapid ribosome synthesis and fast growth when resources spike.​
+    
+
+Klappenbach et al. 2000 (Appl Environ Microbiol) showed that higher rRNA operon copy number correlates with higher maximum growth rate and prevalence in nutrient‑rich settings.​
+
+## 4.2 Consequences for 16S‑based microbiome surveys
+
+Because standard amplicon workflows treat each 16S gene equally, taxa with more copies of the 16S rRNA gene generate more reads per cell:
+
+- Relative abundances can be biased toward high‑copy taxa, underestimating low‑copy taxa, including many archaea.]​
+    
+- Diversity may be overestimated if divergent copies within a genome are treated as separate ASVs/OTUs.​
+    
+
+Acinas et al. 2004 documented divergence and redundancy of 16S copies within genomes, showing that multiple operons can differ enough to appear as distinct OTUs, inflating richness estimates.​
+
+These issues extend to 18S rRNA gene CNV for eukaryotes, as shown by strain‑dependent variation in _Aspergillus fumigatus_ 18S copy number (Herrera et al. 2009).​
+
+## 4.3 Approaches to correct or account for CNV
+
+Several methods attempt to adjust for copy number:
+
+- PAPRICA and CopyRighter use lineage‑specific copy number predictions to correct feature tables before diversity estimation.​
+    
+- PICRUSt and related tools use ancestral state reconstruction of gene content, including rRNA copy number, to predict metagenomes from 16S data.]​
+    
+- QIIME 2 plugins such as `q2-gcn-norm` implement gene copy number normalization for amplicon tables.​
+    
+
+However, Louca et al. 2018 (“Correcting for 16S rRNA gene copy numbers in microbiome surveys remains an unsolved problem”) argued that:​
+
+- Copy number databases are incomplete and biased toward cultured taxa.
+    
+- Mis‑estimated copy numbers can introduce more noise than the original bias.
+    
+- Corrected data sets become hard to compare across studies that used different prediction models or none at all.
+    
+
+The lecture recommendation is to avoid routine copy‑number correction for now and instead:
+
+- Interpret relative abundances and diversity _comparatively_ across treatments/groups within the same study.
+    
+- Be explicit about CNV‑related biases in discussion and when comparing across taxa or domains (e.g., bacteria vs. archaea).​
+    
+
+For truly quantitative microbiomics, Wang et al. (“absolute quantitative microbiome using cellular internal standards”) proposed adding defined cellular internal standards to estimate absolute abundances, which can circumvent some CNV issues but adds complexity.​
+
+---
+
+## 5. Longitudinal microbiome studies
+
+## 5.1 What is a longitudinal study?
+
+Longitudinal designs:
+
+- Repeatedly sample the same individuals over time for the same metrics (e.g., 16S, metagenomics, metabolomics, clinical metadata).
+    
+- Are generally observational, with rich quantitative and qualitative data on exposures and outcomes.
+
+- Reveal temporal dynamics, transitions, stability, and recovery patterns that single time points cannot capture.​
+    
+
+A pre–post study (baseline + one follow‑up) is the simplest form but misses nuanced trajectories such as transient responses, delayed effects, or relapses.​
+
+## 5.2 Advantages and disadvantages
+
+Advantages:​
+
+1. Relate events to exposures/treatments over time (e.g., medication, diet, housing).
+    
+2. Define duration and timing of effects (onset, peak, persistence, recovery).
+    
+3. Establish temporal sequence and patterns (e.g., disease flare followed by microbiome shift, or vice versa).
+    
+4. Quantify within‑subject variability vs. between‑subject heterogeneity.
+    
+5. Characterize development and maturation trajectories (e.g., infant gut, calf gut), including slow vs. fast responders.
+    
+
+Disadvantages:​
+
+1. Loss to follow‑up can bias the cohort.
+    
+2. Complex exposure histories complicate causal inference.
+    
+3. Requires more sophisticated statistical methods (repeated measures, mixed models).
+    
+4. Greater time and financial burden.
+    
+5. Susceptible to time‑varying confounders and external events (dietary shifts, infections, antibiotics).
+    
+
+## 5.3 Example: calf housing and early‑life microbiome
+
+A longitudinal study on calves examined the effects of individual vs. pair housing:​
+
+- Design: n=10 individual, n=20 pair; fecal sampling at days 1, 5, 35, and 63; daily fecal scoring for 56 days.​
+    
+- Findings:
+    
+    - Age was a dominant driver of gut microbiome development, with Shannon diversity increasing significantly between each time point (p < 10⁻³–10⁻¹⁵).​
+        
+    - Housing influenced community composition and health trajectories, but effects had to be interpreted after adjusting for age.
+        
+
+This illustrates a general principle: in early‑life or developmental studies, age is usually the primary structuring variable and must be included in models to isolate treatment effects.​
+
+## 5.4 Statistical approaches: linear mixed effects and q2‑longitudinal
+
+Repeated measures on the same subject violate independence assumptions; mixed models account for this:
+
+- Fixed effects: variables answering the research question (e.g., time, treatment, age, sex, housing).​
+    
+- Random effects: account for study design (subject ID, cage, batch) and repeated measures correlation.​
+    
+
+The QIIME 2 `q2-longitudinal` plugin (Bokulich et al. 2018, _mSystems_) provides tools for longitudinal microbiome analysis:journals.asm+1[​
+
+- Interactive volatility plots.
+    
+- Linear mixed‑effects models for alpha diversity and metadata.
+    
+- Paired differences/distances for before–after comparisons.
+    
+- First differences and first distances for rates of change.
+    
+- NMIT (non‑metric microbial interdependence test) for temporal co‑variation among features.
+    
+- Supervised regression for longitudinal feature identification (e.g., “maturity index” models).
+    
+
+Bokulich et al. showed how these methods can capture subject‑specific trajectories and group‑level effects that would be missed by cross‑sectional analyses.journals.asm+1
+
+## 5.5 Volatility plots, first differences, and first distances
+
+## Volatility plots
+
+- Combine features of control charts and spaghetti plots to visualize change in a variable over time across subjects.​
+    
+- Include warning and control limits (±2 and ±3 SD from the mean) to highlight outlying observations.​
+    
+- Useful to visualize alpha diversity, specific taxa, or metadata trends and examine group differences with mixed‑effects models.​
+    
+
+The calf example showed volatility in Shannon diversity over time, with treatment and sex effects quantified via linear mixed models (p ≈ 0.01 for each factor).​
+
+## First differences and first distances
+
+These quantify _rate_ and _direction_ of change:​
+
+- First differences (alpha/metadata):
+    
+    - Change in a metric between successive time points, or relative to a baseline (e.g., Day 1).
+        
+    - Helps identify periods of rapid change vs. stability.
+        
+- First distances (beta diversity):
+    
+    - Distance between successive samples from the same subject (or between a subject and a baseline reference such as a mother).
+        
+    - Trends in first distances over time reveal how far a community drifts from its initial state.
+        
+
+In the calf data:
+
+- First distances (UniFrac) relative to Day 1 quantified how each calf’s microbiome diverged from baseline.​
+    
+- Housing treatment did not significantly affect these distances, but fecal health did: calves with fewer abnormal fecal events had smaller final distances from baseline.​
+    
+
+## 5.6 Additional q2‑longitudinal methods
+
+- Maturity index prediction:
+    
+    - Supervised regression to predict “microbiome age” from community composition; requires large, evenly sampled cohorts.​
+        
+    - Useful to compare developmental trajectories between groups (e.g., preterm vs. term infants).
+        
+- NMIT (Non‑parametric Microbial Interdependence Test):
+    
+    - Evaluates whether networks of co‑varying features differ between groups over time.​
+        
+    - Requires ≥5–6 time points per subject; robust to some missing data but computationally intensive.
+        
+
+These methods help move beyond static comparisons to understand temporal organization, resilience, and interdependencies in microbial communities.​
+
+---
+
+## 6. Practical takeaways
+
+- Design: anticipate maternal, co‑housing, age, and batch effects; integrate them into design and models rather than treating them as afterthoughts.
+    
+- Controls: always include and analyze negative and positive controls; adopt elements of the RIDE checklist for low‑biomass projects​
+    
+- Distances: choose beta diversity metrics aligned with your question (phylogenetic vs. non‑phylogenetic, abundance vs. presence–absence) and report the rationale.​
+    
+- Interpretation: interpret taxonomic beta diversity jointly with functional data (metagenomes/metabolomes) to assess redundancy vs. specialization.​
+    
+- Longitudinal analysis: use mixed‑effects models and q2‑longitudinal tools (volatility, first distances, NMIT) to capture real temporal patterns rather than relying on repeated cross‑sectional snapshots.
+    
+
+These principles generalize across microbiome systems (human, animal, environmental) and will strengthen the validity and interpretability of your datasets.
