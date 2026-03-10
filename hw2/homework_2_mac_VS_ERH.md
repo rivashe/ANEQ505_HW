@@ -127,9 +127,9 @@ Not all individual samples contained archaea, but every body site category did; 
 
 
 **Question 7**: what is the difference between these two flags?     
---p-exclude mitochondria,chloroplast,sp004296775 \     
+--p-exclude mitochondria,chloroplast,sp004296775 \:     
 actively removes ASVs whose taxonomy contains mitochondria, chloroplast, or *sp004296775* (another chloroplast classification based on Greengenes).   
---p-include c__ \     
+--p-include c__ \:     
 keeps only ASVs classified at least to class level, dropping anything too poorly resolved.  
 
 They can be used in conjunction to remove contaminants and low-confidence classifications.    
