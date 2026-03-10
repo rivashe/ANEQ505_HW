@@ -103,54 +103,54 @@ qiime taxa barplot \
 
 ## Filtered Taxa Bar Plot Questions ~={red}(10 points)=~
 
-**Question 1**: Attach a picture of your taxa bar plot, organized by cow sampling location (body_site) at the level 7 taxonomic level. What general trends do you notice?
+**Question 1**: Attach a picture of your taxa bar plot, organized by cow sampling location (body_site) at the level 7 taxonomic level. What general trends do you notice?   
 
 ![Taxa Bar Plot](taxabarplot_filteres_level7_cow.png)
 
 Overall, body site is a strong driver of microbiome composition. Fecal samples are dominated by Bacteroidia and Clostridia with a relatively consistent structure across individuals. Skin and udder samples show more variability. Nasal and oral samples are compositionally distinct from gut samples. Additionally, controls are nearly depleted of taxa, as expected.    
 
 
-**_Question 2**: What are the top 2 most abundant bacterial **classes** in the fecal samples? 
+**_Question 2**: What are the top 2 most abundant bacterial **classes** in the fecal samples?    
 The top 2 most abundant bacterial classes in fecal samples are *Bacteroidia* and *Clostridia*.   
 
-**_Question 3**: What highly abundant ASV is shared between both the udder and skin samples?
+**_Question 3**: What highly abundant ASV is shared between both the udder and skin samples?    
 The most highly abundant ASV shared between udder and skin is *Faecousia sp000434635*, which could be due to fecal surface contamination in a farm environment.   
 
-**_Question 4**: Which samples (still sorted by body_site) have higher alpha diversity in terms of observed features?
+**_Question 4**: Which samples (still sorted by body_site) have higher alpha diversity in terms of observed features?    
 The samples with more alpha diversity in terms of observed features is found in the skin samples.   
 
-**Question 5**: do all samples contain archaea as well?
+**Question 5**: do all samples contain archaea as well?    
 Not all individual samples contained archaea, but every body site category did; controls and negative extractions did not, which makes sense.    
 
-**Question 6**: why do we filter out sp004296775?
+**Question 6**: why do we filter out sp004296775?    
 *sp004296775* is filtered out because it is a misclassified chloroplast sequence. The classifier assigns it a bacterial label, but it is of the chloroplast endosymbiont.  
 
 
-**Question 7**: what is the difference between these two flags? 
---p-exclude mitochondria,chloroplast,sp004296775 \
+**Question 7**: what is the difference between these two flags?     
+--p-exclude mitochondria,chloroplast,sp004296775 \     
 actively removes ASVs whose taxonomy contains mitochondria, chloroplast, or *sp004296775* (another chloroplast classification based on Greengenes).   
---p-include c__ \
+--p-include c__ \     
 keeps only ASVs classified at least to class level, dropping anything too poorly resolved.  
 
 They can be used in conjunction to remove contaminants and low-confidence classifications.    
 
-**Question 8**: do the positive controls look the same as each other? Yes or No?
-Yes. Both PC1.3 and PC1.4 are dominated by the same taxon in the same order, consistent with mock communities.   
+**Question 8**: do the positive controls look the same as each other? Yes or No?    
+Yes. Both PC1.3 and PC1.4 are dominated by the same taxon in the same order, consistent with mock communities.    
 
 
-**Question 9**: Do the negative/extraction controls (Samples labeled as EC), look like the positive controls? Yes or no? 
+**Question 9**: Do the negative/extraction controls (Samples labeled as EC), look like the positive controls? Yes or no?     
 No, they do not look like positive controls. However, EC1.4 and EC2.3 show a profile similar to the positive control, suggesting cross-contamination into those extraction batches.    
 
 
-**Question 10**: do the negative/extraction controls (Samples labeled as EC), look like the real samples? Yes or no?
+**Question 10**: do the negative/extraction controls (Samples labeled as EC), look like the real samples? Yes or no?    
 No. EC has far fewer reads (a mean of 655), and they also lack coherent community structures, as expected for such negative controls.    
 
 
-## Phylogenetic tree ~={red}(1point)=~
+## Phylogenetic tree ~={red}(1point)=~    
 
-Create a job script to run the phylogenetic tree building. Remember you must start a new terminal session, navigate to your slurm directory, and then submit the job. You do NOT need to start any other interactive sessions.This job will take about an hour. 
+Create a job script to run the phylogenetic tree building. Remember you must start a new terminal session, navigate to your slurm directory, and then submit the job. You do NOT need to start any other interactive sessions.This job will take about an hour.   
 
-Go to OnDemand and create a new text file for your job script
+Go to OnDemand and create a new text file for your job script   
 ```
 nano <tree.sh>
 ```
@@ -187,12 +187,12 @@ qiime fragment-insertion sepp \
   --p-threads 4
 ```
 
-- submit the job from the terminal
+- submit the job from the terminal   
 ```
 #submit the job
 sbatch YourJobName.sh
 ```
-We will use this file in the next homework!
+We will use this file in the next homework!    
 
 ### Once this job finishes, copy and paste what the slurm email says here ~={red}(1 point)=~: 
 Job ID: 24582867
