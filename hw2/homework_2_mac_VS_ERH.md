@@ -103,7 +103,10 @@ qiime taxa barplot \
 
 ## Filtered Taxa Bar Plot Questions ~={red}(10 points)=~
 
-**Question 1**: Attach a picture of your taxa bar plot, organized by cow sampling location (body_site) at the level 7 taxonomic level. What general trends do you notice? 
+**Question 1**: Attach a picture of your taxa bar plot, organized by cow sampling location (body_site) at the level 7 taxonomic level. What general trends do you notice?
+
+![Taxa Bar Plot](taxabarplot_filteres_level7_cow.png)
+
 Overall, body site is a strong driver of microbiome composition. Fecal samples are dominated by Bacteroidia and Clostridia with a relatively consistent structure across individuals. Skin and udder samples show more variability. Nasal and oral samples are compositionally distinct from gut samples. Additionally, controls are nearly depleted of taxa, as expected.    
 
 
