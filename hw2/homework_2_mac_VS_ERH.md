@@ -1,5 +1,5 @@
 **ANEQ Class Assignment #2: Practice Qiime2 Workflow**
-
+Name: Eliud R. Rivas Hernandez
 Due: March 5th 2026 at midnight
 
 

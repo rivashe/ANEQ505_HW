@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Week6_7_StudyNotes_BetaDiversity_Longitudinal_ENRICHED.md",
+                "file": "hw2/homework_2_mac_VS_ERH.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Week6_7_StudyNotes_BetaDiversity_Longitudinal_ENRICHED"
+              "title": "homework_2_mac_VS_ERH"
             }
           },
           {
@@ -238,10 +238,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c3a1f3551e8a749f",
+  "active": "3f4d916b6f2e489c",
   "lastOpenFiles": [
-    "Class Notes.md",
+    "hw2",
     "Week6_7_StudyNotes_BetaDiversity_Longitudinal_ENRICHED.md",
+    "Class Notes.md",
     "05_in_class_work/decomp_tutorial/visualize/taxonomy_gg2.qzv",
     "05_in_class_work/decomp_tutorial/visualize/Unconfirmed 141893.crdownload",
     "05_in_class_work/decomp_tutorial/visualize/taxa_barplot_type_days_nomitochloro.qzv",
