@@ -90,7 +90,7 @@ I chose a depth of 2,000 because Shannon diversity curves plateau for all biolog
 - Lowest observed features: Control (n=5) — median of 10–15, dramatically lower than all other sites.   
 
 4. What is the main difference between Faiths PD and Shannons alpha diversity metrics?      
--Faith's Phylogenetic Diversity (PD) is a phylogenetic alpha-diversity metric that measures the total sum of branch lengths in the phylogenetic tree represented by taxa in a sample, capturing evolutionary breadth.    
+- Faith's Phylogenetic Diversity (PD) is a phylogenetic alpha-diversity metric that measures the total sum of branch lengths in the phylogenetic tree represented by taxa in a sample, capturing evolutionary breadth.    
 - Shannon's index is a non-phylogenetic metric that quantifies both species richness and evenness based purely on taxon counts/proportions.     
 
 5. Which diversity metrics produced by the core-metrics pipeline require phylogenetic information?    
