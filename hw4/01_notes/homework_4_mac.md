@@ -63,13 +63,13 @@ metadata <- read_tsv("../03_metadata/cow_metadata.txt")
 **Read in alpha diversity data ~={red}(1 point)=~**
 - Fill in the file path you used in the R Markdown to load the shannon data
 ```
-shannon <- read_tsv("/alpha_div/shannon.tsv")
+shannon <- read_tsv("alpha_div/shannon.tsv")
 ```
 
 **Read in beta diversity data ~={red}(1 point)=~**
 - Fill in the file path you used in the R Markdown to load the unweighted unifrac data
 ```
-uw_unifrac <- read_tsv("/beta_div/unweighted_unifrac.txt")
+uw_unifrac <- read_tsv("beta_div/unweighted_unifrac.txt")
 ```
 
 **Load in tabulated results ~={red}(1 point)=~**
