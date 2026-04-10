@@ -9,6 +9,7 @@ hw4/
 ├── 01_notes/               # Project notes and documentation
 │   ├── homework4_mac.md
 ├── 02_data/                # Raw data files
+│   ├── tabulated_results.tsv/
 ├── 03_metadata/            # Sample metadata files
 ├── 04_code/                # R code and analysis scripts
 │   ├── alpha_div/          # Alpha diversity analysis data
