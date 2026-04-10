@@ -5,26 +5,35 @@
 ## Project Structure Overview
 
 ```
-cow_r/
+hw4/
 ├── 01_notes/               # Project notes and documentation
+│   ├── homework4_mac.md
 ├── 02_data/                # Raw data files
 ├── 03_metadata/            # Sample metadata files
 ├── 04_code/                # R code and analysis scripts
 │   ├── alpha_div/          # Alpha diversity analysis data
+│   │  ├── shannon.tsv 
 │   ├── beta_div/           # Beta diversity analysis data
+│   │  ├── unweighted_unifrac.txt
 │   ├── cow_HW4_r.Rmd       # Main R Markdown analysis file(code)
 │   └── taxonomy/           # Taxonomy and composition analysis data
+│   │  ├── rel_abundance_taxa_family.RDS
+│   │  ├── rel_abundance_taxa_lowest.RDS
 └── 05_figures/             # Publication-ready figures
+│   ├── shannon_bodisite.jpeg
+│   ├── taxa_family_bodisite.jpeg
+│   ├── taxa_family_fecal.jpeg
+│   ├── unweighted_unifrac_pcoa.jpeg
 ```
 
 ---
 
-## 📂 Detailed Directory Contents
+## Detailed Directory Contents
 
 ### **01_notes/** - Project Notes & Documentation - HW4
 **Purpose:** Complete HW4 notes and answers  
 **Contents:**
-- Project overview notes
+- HW4 complete answers
 
 ---
 
