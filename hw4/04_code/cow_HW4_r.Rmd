@@ -1,0 +1,469 @@
+---
+title: "cow_HW4_r"
+output: html_document
+date: "2026-04-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load libraries
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(ggpubr)
+library(vegan)
+library(scales)
+library(lme4)
+library(lmerTest)
+library(pbkrtest)
+library(emmeans)
+library(rstatix)
+library(forcats)
+library(scales) 
+```
+
+
+# Read in metadata
+- Fill in the correct file path to the cow metadata and copy your answer to your obsidian document. 
+```{r}
+metadata <- read_tsv("../03_metadata/cow_metadata.txt")
+```
+################################################################################
+# Alpha Diversity
+################################################################################
+
+# Read in alpha diversity data 
+- Fill in the correct file path to the shannon diversity data and copy your answer to your obsidian document.
+```{r}
+# Alpha diversity metrics
+shannon <- read_tsv("alpha_div/shannon.tsv")
+```
+
+
+# Tidy alpha diversity metrics and add to metadata
+```{r}
+# Shannon 
+shannon <- shannon %>%
+  rename(sample_name = 1)  #rename 1st column to to match metadata
+
+
+# Add to metadata
+metadata <- metadata %>%
+  left_join(shannon, by = "sample_name") 
+  
+```
+
+# Tidy the metadata 
+```{r}
+metadata <- metadata %>% 
+  drop_na(shannon_entropy)
+```
+
+# Linear Mixed Effects Models
+
+Shannon
+```{r}
+# Build model
+model_bodysite_shannon <- lmer(shannon_entropy ~ body_site + (1|cow_id), data = metadata) # I name all my models with the variable I am testing and the metric I am testing. 
+
+# Residual diagnostic plot, check assumptions
+plot(model_bodysite_shannon)
+# look at estimated variance components
+summary(model_bodysite_shannon)
+# residual diagnostic plot, check assumptions
+anova(model_bodysite_shannon)
+# pairwise comparisons, there are a lot of time points for this data set so this line doesn't work yet, I'll show you how to use it a little later
+emmeans(model_bodysite_shannon, pairwise ~ body_site)
+```
+
+# Build shannon figure with p-values 
+```{r}
+
+# Estimated marginal means pairwise comparisons
+shannon_emmeans <- emmeans(model_bodysite_shannon, ~ body_site)
+
+pvals_shannon <- pairs(shannon_emmeans) |> 
+  as.data.frame()
+
+# Keep only significant comparisons
+pvals_shannon_significant <- pvals_shannon %>%
+  separate(contrast, into = c("group1", "group2"), sep = " - ") %>%
+  filter(p.value < 0.05) %>%
+  mutate(
+    p = if_else(
+      p.value < 0.0001,
+      "< 0.0001",
+      sprintf("%.3f", p.value)
+    )
+  )
+
+pvals_shannon_significant
+
+# Fix overlapping significance bars for plotting
+pvals_shannon_significant <- pvals_shannon_significant %>%
+  add_y_position(
+    data = metadata,
+    formula = shannon_entropy ~ body_site,
+    fun = "max",
+    step.increase = 0.12
+  )
+
+pvals_shannon_significant
+
+# Plot Shannon by body site with only significant emmeans comparisons
+bodysite_shannon_plot <- ggplot(
+  metadata,
+  aes(x = body_site, y = shannon_entropy, fill = body_site)
+) +
+  geom_boxplot() +
+  stat_pvalue_manual(
+    pvals_shannon_significant,
+    xmin = "group1",
+    xmax = "group2",
+    label = "p",
+    tip.length = 0.01,
+    size = 3,
+    inherit.aes = FALSE
+  ) +
+  theme_bw() +
+  theme(
+    axis.title = element_text(face = "bold"),
+    plot.title = element_text(face = "bold"),
+    legend.position = "none"
+  ) +
+  labs(
+    x = "Body Site",
+    y = "Shannon Entropy",
+    title = "Shannon Entropy Across Body Sites"
+  )
+
+bodysite_shannon_plot
+```
+
+# Save the shannon body site figure
+```{r}
+ggsave(bodysite_shannon_plot, filename = "../05_figures/shannon_bodysite.jpeg", device = "jpeg", dpi = 300, width = 8, height = 6)
+```
+
+
+################################################################################
+# Beta Diversity
+################################################################################
+
+# Read in beta diversity data
+- - Fill in the correct file path to the beta diversity data and copy your answer to your obsidian document.
+```{r}
+# Read in beta div metrics 
+uw_unifrac <- read_tsv("beta_div/unweighted_unifrac.txt")
+```
+
+# Tidy beta diversity data and make a unweighted unifrac metadata
+```{r}
+uw_var <- uw_unifrac %>%
+  slice(3) %>%
+  separate(names(.)[2], into = paste0("PC", 1:10), sep = "\t", extra = "drop") %>%
+  mutate(across(starts_with("PC"), ~ as.numeric(.x) * 100)) %>%
+  select(PC1, PC2, PC3)
+
+# Clean ordinance
+uw_unifrac <- uw_unifrac %>%
+  slice(6:n()) %>%
+  filter(!.[[1]] %in% c("Biplot", "Site constraints")) %>%
+  separate(names(.)[2], into = paste0("PC", 1:10), sep = "\t", extra = "drop") %>%
+  rename(sample_name = 1)
+
+metadata_uwunifrac <- uw_unifrac %>%
+  select(sample_name, PC1, PC2, PC3) %>%
+  left_join(metadata) %>% 
+  mutate(across(c(PC1, PC2, PC3), as.numeric))
+```
+
+# Unweighted Unifrac
+
+PC1
+```{r}
+# Build model
+model_bodysite_uwunifrac1 <- lmer(PC1 ~ body_site + (1|cow_id), data = metadata_uwunifrac)  
+# I always add which PC I am testing into the model name
+
+# Residual diagnostic plot, check assumptions
+plot(model_bodysite_uwunifrac1)
+# look at estimated variance components
+summary(model_bodysite_uwunifrac1)
+# residual diagnostic plot, check assumptions
+anova(model_bodysite_uwunifrac1)
+# pairwise comparisons
+emmeans(model_bodysite_uwunifrac1, pairwise ~ body_site)
+```
+PC2
+```{r}
+# Build model
+model_bodysite_uwunifrac2 <- lmer(PC2 ~ body_site + (1|cow_id), data = metadata_uwunifrac)  
+# I always add which PC I am testing into the model name
+
+# Residual diagnostic plot, check assumptions
+plot(model_bodysite_uwunifrac2)
+# look at estimated variance components
+summary(model_bodysite_uwunifrac2)
+# residual diagnostic plot, check assumptions
+anova(model_bodysite_uwunifrac2)
+# pairwise comparisons
+emmeans(model_bodysite_uwunifrac2, pairwise ~ body_site)
+```
+PC3
+```{r}
+# Build model
+model_bodysite_uwunifrac3 <- lmer(PC3 ~ body_site + (1|cow_id), data = metadata_uwunifrac)  
+# I always add which PC I am testing into the model name
+
+# Residual diagnostic plot, check assumptions
+plot(model_bodysite_uwunifrac3)
+# look at estimated variance components
+summary(model_bodysite_uwunifrac3)
+# residual diagnostic plot, check assumptions
+anova(model_bodysite_uwunifrac3)
+# pairwise comparisons
+emmeans(model_bodysite_uwunifrac3, pairwise ~ body_site)
+```
+
+
+# Unweighted Unifrac Pcoa
+- For the Unweighted UniFrac PCoA, the p-values were taken from the ANOVA for each principal coordinate because there were too many body-site comparisons to interpret pairwise. Overall, significant ANOVA results indicate that microbial community composition differed across body sites along those axes. 
+```{r}
+# Pull ANOVA p-values for body_site from each PC model
+p_pc1 <- anova(model_bodysite_uwunifrac1)["body_site", "Pr(>F)"]
+p_pc2 <- anova(model_bodysite_uwunifrac2)["body_site", "Pr(>F)"]
+p_pc3 <- anova(model_bodysite_uwunifrac3)["body_site", "Pr(>F)"]
+
+# Format p-values
+format_p <- function(p) {
+  ifelse(p < 0.0001, "< 0.0001", sprintf("%.4f", p))
+}
+
+p_label <- paste0(
+  "PC1: p = ", format_p(p_pc1), "\n",
+  "PC2: p = ", format_p(p_pc2), "\n",
+  "PC3: p = ", format_p(p_pc3)
+)
+
+# Bottom-right placement
+x_max <- max(metadata_uwunifrac$PC1, na.rm = TRUE)
+y_min <- min(metadata_uwunifrac$PC2, na.rm = TRUE)
+
+# Plot by body site
+bodysite_uwunifrac_pcoa <- ggplot(
+  metadata_uwunifrac,
+  aes(x = PC1, y = PC2, color = body_site)
+) + 
+  geom_point(size = 3) +
+  theme_bw() + 
+  stat_ellipse(type = "t", level = 0.95) +
+  xlab(paste0("PC1 (", round(uw_var[1], 1), "%)")) + 
+  ylab(paste0("PC2 (", round(uw_var[2], 1), "%)")) +
+  labs(
+    title = "Unweighted Unifrac PCoA",
+    color = "Body Site"
+  ) +
+  annotate(
+    "text",
+    x = x_max,
+    y = y_min,
+    label = p_label,
+    hjust = 0.3,
+    vjust = 0,
+    size = 3,
+    fontface = "italic"
+  ) +
+  coord_cartesian(clip = "off")
+
+bodysite_uwunifrac_pcoa
+
+```
+
+# Save the unweighted unifrac pcoa
+```{r}
+ggsave(bodysite_uwunifrac_pcoa, filename = "../05_figures/unweighted_unifrac_bodysite_pcoa.jpeg", device = "jpeg", dpi = 300, width = 8, height = 6)
+```
+
+################################################################################
+# Taxa bar plots
+################################################################################
+
+# Load in tabulated_results.tsv
+```{r}
+tabulated_results <- read_tsv("../02_data/tabulated_results.tsv")
+```
+
+
+# Format, convert taxonomy to relative abundance, and group at taxonomic levels
+```{r}
+# format data for making a taxa plot
+# get rid of #q2:types row
+tabulated_results <- tabulated_results[2:nrow(tabulated_results),]
+
+# remove non-numeric columns
+# we will filter out Taxon for now so we can calculate relative abundances, but will add it back later
+tabulated_results_filt <- tabulated_results %>% 
+  select(-all_of(c("Sequence","Confidence","Taxon")))
+# we keep id and make it as the row name
+tabulated_results_filt <- column_to_rownames(tabulated_results_filt, var = "id")
+
+# calculate relative abundances
+tabulated_results_filt[] <- lapply(tabulated_results_filt, function(x) as.numeric(as.character(x)))
+rel_abundance <- apply(tabulated_results_filt, 2, function(x) x / sum(x))
+
+# check that each column adds up to 1
+colSums(rel_abundance)
+
+# re-add taxonomy to relative abundance table
+rel_abundance <- data.frame(rel_abundance, check.names = FALSE)
+rel_abundance$id <- rownames(rel_abundance)
+
+tabulated_results_merge <- tabulated_results %>% # create a tabulated results for merging
+  select(all_of(c("id","Taxon")))
+
+rel_abundance_taxa <- merge(rel_abundance, tabulated_results_merge, by = "id", all.x = TRUE)
+
+# we now have a table with the per-sample relative abundances of each ASV (along with their taxonomic assignments)
+
+# Taxon column data is messy - let's split the data up into taxonomic ranks
+rel_abundance_taxa_split <- rel_abundance_taxa %>% 
+  separate(Taxon, 
+           into = c("Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species"),
+           sep = ";\\s*",  # splits on semicolon and optional space
+           fill = "right", # fills missing columns with NA if some rows are shorter
+           remove = TRUE) # remove original "Taxon" column too
+
+# some ranks have a value even though they are unidentified (e.g., g__, s__)
+# let's change those to NAs
+rel_abundance_taxa_split[rel_abundance_taxa_split == "d__"] <- NA
+rel_abundance_taxa_split[rel_abundance_taxa_split == "p__"] <- NA
+rel_abundance_taxa_split[rel_abundance_taxa_split == "c__"] <- NA
+rel_abundance_taxa_split[rel_abundance_taxa_split == "o__"] <- NA
+rel_abundance_taxa_split[rel_abundance_taxa_split == "f__"] <- NA
+rel_abundance_taxa_split[rel_abundance_taxa_split == "g__"] <- NA
+rel_abundance_taxa_split[rel_abundance_taxa_split == "s__"] <- NA
+
+# create a column with the lowest identified taxonomic level for all ASVs
+rel_abundance_taxa_lowest <- rel_abundance_taxa_split %>% 
+  rowwise() %>%
+  mutate(LowestTaxLevel = {
+    tax_levels <- c(Domain, Phylum, Class, Order, Family, Genus, Species)
+    last_non_na <- tail(na.omit(tax_levels), 1)
+    ifelse(length(last_non_na) > 0, last_non_na, NA)
+  }) %>%
+  ungroup()
+
+# group by the lowest taxonomic level
+rel_abundance_taxa_lowest <- rel_abundance_taxa_lowest %>%
+  mutate(LowestTaxLevel = ifelse(is.na(LowestTaxLevel), "Unassigned", LowestTaxLevel)) %>% # convert NAs to "Unassigned"
+  group_by(LowestTaxLevel) %>%
+  summarise(across(where(is.numeric), sum, na.rm = TRUE))
+
+# save the file
+saveRDS(rel_abundance_taxa_lowest, "taxonomy/rel_abundance_taxa_lowest.RDS")
+
+# group at level 5/Family level
+rel_abundance_taxa_family <- rel_abundance_taxa_split %>%
+  mutate(Family = ifelse(is.na(Family), "Unassigned", Family)) %>% # convert NAs to "Unassigned"
+  group_by(Family) %>%
+  summarise(across(where(is.numeric), sum, na.rm = TRUE))
+
+# save the file
+saveRDS(rel_abundance_taxa_family, "taxonomy/rel_abundance_taxa_family.RDS")
+
+# this allows you to have either the lowest-identified level or collapsed taxonomic tables 
+# however, these are massive and have >400 samples for this dataset
+# because this isn't very conducive to nice taxa bar plots, in the next chunk, we are going to filter to one facility only and make a simple taxa bar plot
+```
+
+# Taxa bar plot for fecal and body site
+```{r}
+# graph at the family level for fecal samples
+# convert to long format
+rel_abundance_taxa_family_long <- rel_abundance_taxa_family %>%
+  pivot_longer(cols = -Family, names_to = "sample_name", values_to = "relative_abundance")
+
+# assign rare taxa (less than .02 rel abund to other)
+rel_abundance_taxa_family_long <- rel_abundance_taxa_family_long %>%
+  mutate(rare_taxa = if_else(relative_abundance < 0.02, "Other", Family))
+
+# associate metadata with taxa
+metadata <- read_tsv("../03_metadata/cow_metadata.txt")
+metadata_filt <- metadata[, which((names(metadata) %in% c("sample_name","body_site"))==TRUE)]
+
+rel_abundance_taxa_family_long <- rel_abundance_taxa_family_long %>% 
+  left_join(metadata_filt, by = "sample_name")
+
+# filter out control samples
+rel_abundance_taxa_family_long <- rel_abundance_taxa_family_long[rel_abundance_taxa_family_long$body_site != "control",]
+
+# filter to just one body site
+rel_abundance_taxa_family_long_fecal <- rel_abundance_taxa_family_long[rel_abundance_taxa_family_long$body_site == "fecal",]
+
+base_colors <- c(
+  "#1B9E77", "#D95F02", "#7570B3", "#E7298A", "#66A61E",
+  "#C06C84", "#A6761D", "#666666", "#7f3b6c", "#355c7d",
+  "#b15928", "#9e003f", "#ff7f00", "#8dd3c7", "#bebada",
+  "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5",
+  "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f", "#a6cee3"
+)
+
+# Get unique taxa categories from the full dataset if you want to use colors for both plots
+categories <- unique(rel_abundance_taxa_family_long$rare_taxa)
+
+# special colors for Other and Unassigned
+special_colors <- c("Other" = "gray", "Unassigned" = "black")
+remaining <- setdiff(categories, names(special_colors))
+
+# Recycle colors properly
+assigned_colors <- rep(base_colors, length.out = length(remaining))
+names(assigned_colors) <- remaining
+
+# Combine special and base colors
+colors <- c(special_colors, assigned_colors)
+
+#taxa bar plot, plotted at the Family taxonomic level 
+taxa_family_fecal <- ggplot(
+  rel_abundance_taxa_family_long_fecal,
+  aes(x = sample_name, y = relative_abundance, fill = rare_taxa)
+) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = colors) +
+  theme(
+    axis.text.x = element_blank(),
+    legend.position = "bottom",
+    axis.title = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  ) +
+  labs(
+    x = "Sample",
+    y = "Relative Abundance",
+    fill = "Family")
+
+taxa_family_fecal
+ggsave(taxa_family_fecal, filename = "../05_figures/taxa_family_fecal.jpeg", device = "jpeg", dpi = 300, width = 12, height = 8)
+
+# Taxabar plot for body site
+# graph taxa by sample type at the family level 
+rel_abundance_taxa_family_long_fecal_ordered <- rel_abundance_taxa_family_long_fecal %>%
+  mutate(body_site = fct_relevel(body_site, "fecal","nasal", "oral", "skin", "udder")) %>% 
+  arrange(body_site)
+
+taxa_family_bodysite <- ggplot(
+  rel_abundance_taxa_family_long,
+  aes(x = sample_name, y = relative_abundance, fill = rare_taxa)) +
+  facet_wrap(~body_site, scales = "free_x") +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = colors) +
+  theme(legend.position = "bottom", axis.text.x = element_blank()) +
+  labs(x = "Sample", y = "Relative Abundance", fill = "Family")
+
+taxa_family_bodysite
+
+ggsave(taxa_family_bodysite, filename = "../05_figures/taxa_family_bodysite.jpeg", device = "jpeg", dpi = 300, width = 12, height = 8)
+```
+
