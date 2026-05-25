@@ -26,12 +26,14 @@ per-sample FASTQ artifact that DADA2 can process.
 
 > **Note:** Demultiplexing was performed in a separate upstream script using
 > `qiime demux emp-paired` (paired-end) and `qiime demux emp-single`
+> additionally, `--p-rev-comp-mapping-barcodes` was changed to `--p-no-golay-error-correction` due to primers used for this experiment, which was confirmed due to low reads when using the `--p-rev-comp-mapping-barcodes`.
 > (forward-only). The outputs `p_demux/p_demux.qza` and `f_demux/f_demux.qza`
 > are the starting inputs for the steps below.
 
 To inspect read quality and determine truncation lengths before denoising:
 
 ```bash
+
 # Paired-end quality summary
 qiime demux summarize \
   --i-data p_demux/p_demux.qza \
